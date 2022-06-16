@@ -16,7 +16,7 @@ async function getOneTodo(todoNumber: 1) {
 }
 
 export const wakeUpMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QHcCGBrMBaArgBwDpYAbMMPASwDsoBiAcQFEA5AFQBlGB9AQXZ4BKAWUSg8Ae1gUALhXFVRIAB6IsAZgBsGggHY1OgBw7jxgEwBOPQBYANCACeqtVZ26AjG6tWLbg+a8aOgC+QXZomLiEJGSUNLQAYgCSAtx8giJIIBJSsvKKKghYHm4EGgCsAAwaFToV5mV6OqYado6FbqaunhrmbuZ+Oh2BViFhGNj4BOHUUACqeLQAyswA8isAWoyK2TJyCpkFWGUaagRWaqZuGm4VahUVVy0OqmVWJZVuamUGGm9Vv6MQOEJoRpjR5rQlLBpKhpGACKgAGZwgBOAAo7vcAJS0YGRKYYGbzbaSXZ5A6INRqcylGrnGq-Y6mUytJwnAhfWrmTT3NyVcwaQF4ybICgQMA8YG0AAiqHsAAIKLB5eIAG5gFHyqjiZAknJ7fKqIalHRWCrfa6+Co-AyswpUioENw6BqaAwGMoNY4hUIgbXi+CZYVRUjkGZ6sn7UCHJkEPx3cyXc3NKl2or1DnU61M3oeAymIXjfFguZ4CO5KPKRCfVzW4xfCpWb6+Ixpz2mXRlG4eMoJ87BX3BqZiiXA8sGikIKz+UqvKndTm9tM8jkNa2mPzMjcGQsRfDj8nRl5GM4XK43TGPNMaUxlTvdlznC6Nn1BIA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QHcCGBrMBaArgBwDpYAbMMPASwDsoBiAcQFEA5AFQBlGB9AQXZ4BKAWUSg8Ae1gUALhXFVRIAB6IsAFgAMAJgIB2AMz6AbBoCcR09oCMagwBoQAT1UBWABxGCVq5f26jbhpqpm4AvqEOaJi4hCRklDS0AGIAkgLcfIIiSCASUrLyiioIWDaeblr6pi5qbqY+LhoBDs4lVh567gZq+lYuWiZuYREgUdj4BFHUUACqeLQAyswA8ssAWoyKeTJyCjnFWC4hBCYuLla6594uulYtqoGmBKYvRj6XQY3DkRjjhFM0Oa0JSwaSoaRgAioABmEIATgAKfQaFEASloYxikww0zmW0kO0K+0QWksBFqFTULlO-gMRnuJX6agILmM-V0aisRmpL3CP2iE2QFAgYB4Y1oEHkkOoADdxJhsQL-sLRWMELLxABjcG7ADaGgAuvj8rsiohLvoWWcqijqsFdFoGYdLnoAjYLmo3dU+aNflihSKxb9aGA4XDxHCCHhiODoRGALaKv6TFVBzDqqhy7UFKj6o05bY5s0Ifw6YzBZHtDzlp1aWrkxqWNRqLTeFHfX1KlOB8UAEVQjgABBRYIPxDLQ4OqOJkMbCXtQAcuVYCG5bJojJpAlpW079HU9G5LudkX4zAZwiNpyL4DlMRM4uRpnOi8TGccmpuqpYbP43LWameRsUSCB0qVMXQfXvf4cUBPAX1NN8jB0dpTDrSkNBqI5TCdXRzGeV4uQ0MC2Sgv1BVTMYEKJRdEHA8lHjcYwjDpHwnU5J5zCGCDeg0YxSX0MilWohdlFUZCdFOc5Lm8PpbidIYdBecwLnLW4fEvUIgA */
   createMachine(
     {
       context: {
@@ -66,11 +66,16 @@ export const wakeUpMachine =
         wideAwake: {
           invoke: {
             src: "getTodosFromDb",
-            onDone: {
-              actions: "updateTodo",
-            },
-
-            onError: "sleeping",
+            onDone: [
+              {
+                actions: "updateTodo",
+              },
+            ],
+            onError: [
+              {
+                target: "sleeping",
+              },
+            ],
           },
           on: {
             "Day is over now": {
